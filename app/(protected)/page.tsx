@@ -39,7 +39,7 @@ export default function Component() {
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {CourseData.map((item, index) => (
-            <CourseCard key={index} item={item} />
+            <CourseCard key={index} item={{ ...item, index }} />
           ))}
         </div>
       </div>

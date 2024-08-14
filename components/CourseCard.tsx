@@ -2,6 +2,7 @@ import { FaClock, FaTags } from "react-icons/fa";
 import { Card, CardContent } from "./ui/card";
 import { MdCurrencyRupee } from "react-icons/md";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 interface CourseCardProps {
   item: {
@@ -10,6 +11,7 @@ interface CourseCardProps {
     hour: number;
     price: number;
     url: string;
+    index: number;
   };
 }
 
@@ -42,10 +44,14 @@ const CourseCard = ({ item }: CourseCardProps) => {
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              View
-            </Button>
-            <Button size="sm">Enroll</Button>
+            <Link href={`/course/${item.index}`}>
+              <Button variant="outline" size="sm">
+                View
+              </Button>
+            </Link>
+            <Link href={`/course/${item.index}`}>
+              <Button size="sm">Enroll</Button>
+            </Link>
           </div>
         </div>
       </CardContent>
