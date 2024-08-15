@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dialog, DialogContent } from "../ui/dialog";
+import CourseSections from "./CourseSections";
 
 interface step {
   title: string;
@@ -34,12 +36,14 @@ const steps = [
     url: "https://videos.pexels.com/video-files/3129424/3129424-uhd_2560_1440_24fps.mp4",
   },
 ];
-export default function VideoSection({ title }: { title: string }) {
+
+function VideoSection({ title }: { title: string }) {
   const [selectedVideo, setSelectedVideo] = useState<step | null>(null);
 
   useEffect(() => {
     const step = steps.find(({ title: value }) => value === title);
     if (step) setSelectedVideo(step);
+    else setSelectedVideo(null);
   }, [title]);
 
   if (!selectedVideo)
@@ -55,8 +59,8 @@ export default function VideoSection({ title }: { title: string }) {
     );
 
   return (
-    <div className="w-full max-w-7xl mx-auto grid grid-rows-[auto_auto_1fr] gap-6 p-4 md:p-6">
-      <div className="rounded-xl overflow-hidden">
+    <div className="w-full max-w-7xl mx-auto flex flex-col gap-6 p-4 md:p-6">
+      <div className="rounded-xl overflow-hidden w-full">
         <video
           className="w-full aspect-video"
           src={selectedVideo.url}
@@ -65,9 +69,7 @@ export default function VideoSection({ title }: { title: string }) {
           autoPlay
         />
       </div>
-      <div>
-        <h1 className="text-2xl font-semibold">{selectedVideo.title}</h1>
-      </div>
+      <h1 className="text-2xl font-semibold">{selectedVideo.title}</h1>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {steps.map((data, index) => (
           <div
@@ -88,3 +90,24 @@ export default function VideoSection({ title }: { title: string }) {
     </div>
   );
 }
+
+const VideoModel = ({
+  setSelectedVideo,
+  title,
+}: {
+  title: string;
+  setSelectedVideo: Dispatch<SetStateAction<string>>;
+}) => (
+  <Dialog open={!!title} onOpenChange={() => setSelectedVideo("")}>
+    <DialogContent className="w-screen h-screen max-h-screen max-w-full overflow-y-auto flex ">
+      <div className="hidden w-1/3 my-5 xl:block">
+        <CourseSections setSelectedVideo={setSelectedVideo} />
+      </div>
+      <div className="w-full flex flex-col">
+        <VideoSection title={title} />
+      </div>
+    </DialogContent>
+  </Dialog>
+);
+
+export default VideoModel;
