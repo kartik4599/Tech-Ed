@@ -1,12 +1,32 @@
-import { FaChevronRight } from "react-icons/fa";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../ui/collapsible";
+"use client";
+import { useState } from "react";
 import { IoPlayCircleOutline } from "react-icons/io5";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+import { Dialog, DialogContent } from "../ui/dialog";
+import VideoSection from "./VideoSection";
+
+const VideoModel = ({
+  setModelState,
+  title,
+}: {
+  title: string;
+  setModelState: () => void;
+}) => (
+  <Dialog open={!!title} onOpenChange={setModelState}>
+    <DialogContent className="w-screen h-screen max-h-screen max-w-full overflow-y-auto flex flex-col flex-grow gap-0">
+      <VideoSection title={title} />
+    </DialogContent>
+  </Dialog>
+);
 
 const CourseContent = () => {
+  const [selectedVideo, setSelectedVideo] = useState("");
+
   const data = [
     {
       title: "Introduction",
@@ -67,38 +87,43 @@ const CourseContent = () => {
     <div className="bg-background text-foreground rounded-lg  ">
       <h2 className="text-2xl font-bold mb-4">Course Content</h2>
       <div className="space-y-4">
-        {data.map((item, index) => {
-          return (
-            <Collapsible key={index}>
-              <CollapsibleTrigger className="flex items-center justify-between w-full bg-muted rounded-md px-4 py-3 cursor-pointer">
-                <div className="flex items-center space-x-3">
-                  <FaChevronRight className="w-5 h-5 transition-transform duration-300 transform-gpu" />
-                  <h3 className="text-lg font-medium">{item.title}</h3>
-                </div>
-                <span className="text-muted-foreground text-sm">
-                  {item.steps.length} Lessons
-                </span>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="pl-8 pt-4 space-y-2">
-                {item.steps.map((data, index) => (
-                  <div
-                    className="flex items-center justify-between"
-                    key={index}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <IoPlayCircleOutline className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm">{data.title}</span>
-                    </div>
-                    <span className="text-muted-foreground text-xs">
-                      {data.min} min
+        <Accordion type="single" collapsible className="w-full">
+          {data.map((item, index) => {
+            return (
+              <AccordionItem value={item.title} key={index}>
+                <AccordionTrigger className="flex items-center justify-between w-full bg-muted rounded-md px-3 py-3 my-2 cursor-pointer">
+                  <div className="flex items-center space-x-3">
+                    <h3 className="text-lg font-medium">{item.title}</h3>
+                    <span className="text-muted-foreground text-sm">
+                      ({item.steps.length} Lessons)
                     </span>
                   </div>
-                ))}
-              </CollapsibleContent>
-            </Collapsible>
-          );
-        })}
+                </AccordionTrigger>
+                <AccordionContent className="space-y-2 px-3">
+                  {item.steps.map((data, index) => (
+                    <div
+                      className="flex items-center justify-between"
+                      key={index}
+                      onClick={setSelectedVideo.bind(null, data.title)}>
+                      <div className="flex items-center space-x-2 cursor-pointer">
+                        <IoPlayCircleOutline className="size-5 text-muted-foreground" />
+                        <span>{data.title}</span>
+                      </div>
+                      <span className="text-muted-foreground text-xs">
+                        {data.min} min
+                      </span>
+                    </div>
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
       </div>
+      <VideoModel
+        title={selectedVideo}
+        setModelState={() => setSelectedVideo("")}
+      />
     </div>
   );
 };
