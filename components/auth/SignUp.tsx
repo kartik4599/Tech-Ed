@@ -8,9 +8,9 @@ import { useForm } from "react-hook-form";
 import { cn, SignUpForm, signUpFormResolver } from "@/lib/utils";
 // import userStore from "@/hooks/user-store";
 import { toast } from "sonner";
+import { createAccount } from "@/lib/services";
 
 const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
-  //   const setUser = userStore((state) => state.setUser);
   const { register, handleSubmit, formState } = useForm<SignUpForm>({
     resolver: signUpFormResolver,
   });
@@ -22,12 +22,9 @@ const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
   const createUser = async (payload: SignUpForm) => {
     try {
       setloading(true);
-      console.log(payload);
-
-      //   const { token } = await createAccount(payload);
-      //   setuserCreated(true);
-      //   setUser(token);
+      const data = await createAccount(payload);
       toast.success("Account Created");
+      setisSignIn();
     } catch (e: any) {
       console.log(e?.response?.data);
       toast.error(e?.response?.data || "Error Occured");
