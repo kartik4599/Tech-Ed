@@ -1,13 +1,16 @@
 import { sign } from "hono/jwt";
 import { JWTPayload } from "hono/utils/jwt/types";
+import bcryptjs from "bcryptjs";
 
-export const createPasswordHash = async (password: string) => password;
-// await argon.hash(password);
+const salt = bcryptjs.genSaltSync(Number(process.env.SALT));
 
-export const verifyPassword = async (password: string, hash: string) => false;
-// await argon.verify(hash, password);
+export const createPasswordHash = (password: string) =>
+  bcryptjs.hashSync(password, salt);
+
+export const verifyPassword = (password: string, hash: string) =>
+  bcryptjs.compareSync(password, hash);
 
 export const createJwtToken = async (payload: Object) => {
   const data: JWTPayload = { data: payload };
-  return await sign(data, "secret");
+  return await sign(data, process.env.JWTSECRECT!);
 };

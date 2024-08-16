@@ -20,7 +20,7 @@ User.post("/signup", async ({ json, req }) => {
     const exsitingUser = await client.user.findUnique({ where: { email } });
     if (exsitingUser) throw new Error("User already exists");
 
-    const hashedPassword = await createPasswordHash(password);
+    const hashedPassword = createPasswordHash(password);
 
     const user = await client.user.create({
       data: {
@@ -47,7 +47,7 @@ User.post("/signin", async (c) => {
     const user = await client.user.findUnique({ where: { email } });
     if (!user) throw new Error("Invalid credentials");
 
-    const isPasswordValid = await verifyPassword(password, user.password);
+    const isPasswordValid = verifyPassword(password, user.password);
     if (!isPasswordValid) throw new Error("Invalid credentials");
 
     const token = await createJwtToken(user.id);
@@ -59,21 +59,25 @@ User.post("/signin", async (c) => {
   }
 });
 
-User.get("/me", jwt({ secret: "secret" }), async ({ get, json }) => {
-  try {
-    const { data: userId } = get("jwtPayload") as { data: number };
+User.get(
+  "/me",
+  jwt({ secret: process.env.JWTSECRECT! }),
+  async ({ get, json }) => {
+    try {
+      const { data: userId } = get("jwtPayload") as { data: number };
 
-    const user = await client.user.findUnique({
-      where: { id: userId },
-      select: { id: true, name: true, email: true },
-    });
+      const user = await client.user.findUnique({
+        where: { id: userId },
+        select: { id: true, name: true, email: true },
+      });
 
-    if (!user) throw new Error("Client not found");
+      if (!user) throw new Error("Client not found");
 
-    return json({ data: user });
-  } catch (e: any) {
-    throw new HTTPException(400, { message: e.message });
+      return json({ data: user });
+    } catch (e: any) {
+      throw new HTTPException(400, { message: e.message });
+    }
   }
-});
+);
 
 export default User;
