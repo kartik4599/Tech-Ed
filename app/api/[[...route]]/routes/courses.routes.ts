@@ -15,8 +15,9 @@ Course.get("/", jwt({ secret: process.env.JWTSECRECT! }), async ({ json }) => {
 Course.get(
   "/:id",
   jwt({ secret: process.env.JWTSECRECT! }),
-  async ({ json, req }) => {
+  async ({ json, req, get }) => {
     const id = Number(req.param("id"));
+    const { data: userId } = get("jwtPayload") as { data: number };
 
     const course = await client.course.findUnique({
       where: { id },
@@ -25,7 +26,11 @@ Course.get(
     if (!course)
       throw new HTTPException(400, { message: "Did not found the course" });
 
-    return json(course);
+    const paidcourse = await client.user_Courses.findUnique({
+      where: { userId, courseId: course.id },
+    });
+
+    return json({ ...course, isPaid: !!paidcourse });
   }
 );
 

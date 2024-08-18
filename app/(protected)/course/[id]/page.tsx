@@ -9,8 +9,12 @@ import { fetcher } from "@/lib/services";
 import { Course } from "@prisma/client";
 import useSwr from "swr";
 
+export interface CourseDetail extends Course {
+  isPaid: boolean;
+}
+
 export default function CourseDetail({ params }: { params: { id: string } }) {
-  const { data, isLoading, error } = useSwr<Course>(
+  const { data, isLoading, error, mutate } = useSwr<CourseDetail>(
     `/courses/${params.id}`,
     fetcher
   );
@@ -39,7 +43,7 @@ export default function CourseDetail({ params }: { params: { id: string } }) {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16 lg:py-20">
-      <MainCourseComponent data={data!} />
+      <MainCourseComponent data={data!} refetch={mutate} />
       <Separator className="my-4" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16">
         <CousePointsComponent />

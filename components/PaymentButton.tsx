@@ -1,19 +1,37 @@
-"use client";
-import { createPaymentOrder } from "@/lib/services";
+import { createPaymentOrder, recivePaymentOrder } from "@/lib/services";
 import { useCallback, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import useRazorpay from "react-razorpay";
+import { toast } from "sonner";
 import { Button } from "./ui/button";
 
-const PaymentButton = ({ amount }: { amount: number }) => {
+const PaymentButton = ({
+  id,
+  amount,
+  refetch,
+}: {
+  amount: number;
+  id: number;
+  refetch: () => void;
+}) => {
   const [Razorpay, isLoaded] = useRazorpay();
   const [loading, setLoading] = useState(false);
+  const paymentHandler = async (res: any) => {
+    try {
+      setLoading(true);
+      await recivePaymentOrder(res);
+      refetch();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handlePayment = useCallback(async () => {
     try {
       setLoading(true);
-      const order = await createPaymentOrder(amount * 100);
-      console.log(order);
+      const order = await createPaymentOrder(id, amount * 100);
       const options = {
         key: order.key,
         amount: order.amount.toString(),
@@ -21,9 +39,7 @@ const PaymentButton = ({ amount }: { amount: number }) => {
         name: "AR Education",
         description: "Course Fee's",
         order_id: order.id,
-        handler: (res: any) => {
-          console.log(res);
-        },
+        handler: paymentHandler,
         theme: {
           color: "#0f172a",
         },
@@ -33,10 +49,14 @@ const PaymentButton = ({ amount }: { amount: number }) => {
       rzpay.open();
     } catch (e) {
       console.log(e);
+      toast.error("Error Occured in Process", {
+        description: "Please try again",
+        closeButton: true,
+      });
     } finally {
       setLoading(false);
     }
-  }, [Razorpay, amount]);
+  }, [Razorpay, amount, id, paymentHandler]);
 
   return (
     <Button
@@ -47,7 +67,7 @@ const PaymentButton = ({ amount }: { amount: number }) => {
         {loading ? (
           <>
             <FaSpinner className="animate-spin text-xl mx-2" />
-            Signing In...
+            Loading...
           </>
         ) : (
           <>

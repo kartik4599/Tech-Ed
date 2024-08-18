@@ -28,8 +28,19 @@ export const getOwnData = async () => {
 };
 
 // Payment Api's
-export const createPaymentOrder = async (amount: number) => {
-  const { data } = await protectedRequest().post("/payment/order", { amount });
+export const createPaymentOrder = async (id: number, amount: number) => {
+  const { data } = await protectedRequest().post("/payment/order", {
+    id,
+    amount,
+  });
+  return data;
+};
+
+export const recivePaymentOrder = async (razorPayResponse: any) => {
+  const { data } = await protectedRequest().post(
+    "/payment/receive",
+    razorPayResponse
+  );
   return data;
 };
 

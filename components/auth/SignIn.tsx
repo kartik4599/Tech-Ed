@@ -26,7 +26,7 @@ const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
       const { token } = await loginAccount(payload);
       localStorage.setItem("token", token);
       toast.success("Logged In Succefully");
-      router.refresh();
+      router.push("/");
     } catch (e) {
       toast.error("Error Occured");
     } finally {

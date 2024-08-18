@@ -45,11 +45,12 @@ model User_Courses {
   courseId Int
   course   Course @relation(fields: [courseId], references: [id])
 
-  @@unique([userId])
+  @@id([userId, courseId])
+  @@unique([userId, courseId])
 }
 
 model Payment {
-  orderId       String        @unique
+  orderId       String        @unique @id
   paymentStatus PaymentStatus @default(Started)
   payment_id    String?
   signature     String?
