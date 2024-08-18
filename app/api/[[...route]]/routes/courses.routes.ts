@@ -27,7 +27,7 @@ Course.get(
       throw new HTTPException(400, { message: "Did not found the course" });
 
     const paidcourse = await client.user_Courses.findUnique({
-      where: { userId, courseId: course.id },
+      where: { userId_courseId: { courseId: course.id, userId } },
     });
 
     return json({ ...course, isPaid: !!paidcourse });
