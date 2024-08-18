@@ -32,3 +32,8 @@ export const createPaymentOrder = async (amount: number) => {
   const { data } = await protectedRequest().post("/payment/order", { amount });
   return data;
 };
+
+export const fetcher = (path: string) =>
+  protectedRequest()
+    .get(path)
+    .then(({ data }) => data);

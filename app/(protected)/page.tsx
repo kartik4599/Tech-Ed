@@ -1,11 +1,11 @@
 import { Input } from "@/components/ui/input";
 import { IoIosSearch } from "react-icons/io";
 import { Badge } from "@/components/ui/badge";
-import CourseCard from "@/components/CourseCard";
-import { CourseData } from "@/lib/utils";
+import AllCourses from "@/components/AllCourses";
 
 export default function Component() {
   const tags = ["Course 1", "Course 2", "Course 3", "Course 4", "Course 5"];
+
   return (
     <main className="flex-1 py-12 md:py-16 lg:py-20">
       <div className="container grid gap-8 px-4 md:px-6">
@@ -37,11 +37,7 @@ export default function Component() {
             ))}
           </div>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {CourseData.map((item, index) => (
-            <CourseCard key={index} item={{ ...item, index }} />
-          ))}
-        </div>
+        <AllCourses />
       </div>
     </main>
   );

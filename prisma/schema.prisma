@@ -8,9 +8,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum PaymentStatus {
+  Started
+  Paid
+  UnPaid
+}
+
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
+  id       Int            @id @default(autoincrement())
+  email    String         @unique
   password String
   name     String?
+  courses  User_Courses[]
+  payment  Payment[]
+
+  createdAt DateTime @default(now())
+}
+
+model Course {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  hours       Int
+  price       Int
+  imageUrl    String?
+  users       User_Courses[]
+  payment     Payment[]
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model User_Courses {
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+  courseId Int
+  course   Course @relation(fields: [courseId], references: [id])
+
+  @@unique([userId])
+}
+
+model Payment {
+  orderId       String        @unique
+  paymentStatus PaymentStatus @default(Started)
+  payment_id    String?
+  signature     String?
+  userId        Int
+  user          User          @relation(fields: [userId], references: [id])
+  courseId      Int
+  course        Course        @relation(fields: [courseId], references: [id])
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 }
