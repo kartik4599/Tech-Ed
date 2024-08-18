@@ -1,6 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
 import { IoPlayCircleOutline } from "react-icons/io5";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 
 const CourseSections = ({
   setSelectedVideo,

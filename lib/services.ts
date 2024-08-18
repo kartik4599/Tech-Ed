@@ -11,6 +11,7 @@ export const protectedRequest = () => {
   });
 };
 
+// User Api's
 export const createAccount = async (payload: SignUpForm) => {
   const { data } = await unProtectedRequest.post("/auth/signup", payload);
   return data;
@@ -23,5 +24,11 @@ export const loginAccount = async (payload: SignInForm) => {
 
 export const getOwnData = async () => {
   const { data } = await protectedRequest().get("/auth/me");
+  return data;
+};
+
+// Payment Api's
+export const createPaymentOrder = async (amount: number) => {
+  const { data } = await protectedRequest().post("/payment/order", { amount });
   return data;
 };

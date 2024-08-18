@@ -1,6 +1,4 @@
-import { MdCurrencyRupee } from "react-icons/md";
-import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
+import PaymentButton from "../PaymentButton";
 
 interface MainCourseComponentProps {
   data?: {
@@ -31,12 +29,7 @@ const MainCourseComponent = ({ data }: MainCourseComponentProps) => {
         <p className="text-muted-foreground text-lg md:text-xl">
           {payload.description}
         </p>
-        <Button className="px-6 py-2">
-          <span className="text-xl">Buy</span>{" "}
-          <Separator orientation="vertical" className="mx-4" />{" "}
-          <MdCurrencyRupee />
-          <span className="text-sm">{payload.price}</span>
-        </Button>
+        <PaymentButton amount={payload.price} />
       </div>
       <img
         src={payload.url}
