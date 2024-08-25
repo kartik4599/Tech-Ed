@@ -1,20 +1,12 @@
 "use server";
 
 import client from "@/lib/DBClient";
-import { decode } from "hono/jwt";
-import { cookies } from "next/headers";
-
-export const currentUser = async () => {
-  const token = cookies().get("token");
-  if (!token) throw new Error("Unauthorized");
-  const id = decode(token.value).payload.data as number;
-  const user = await client.user.findUnique({ where: { id } });
-  if (!user) throw new Error("user not found");
-  return user;
-};
+import { currentUser } from "./user";
 
 export const getAllCourses = async () => {
-  return await client.course.findMany();
+  return await client.course.findMany({
+    orderBy: { createdAt: "asc" },
+  });
 };
 
 export const getCourseById = async (id: number) => {

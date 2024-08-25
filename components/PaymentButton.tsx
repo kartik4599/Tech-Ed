@@ -1,12 +1,12 @@
 "use client";
 
-import { createPaymentOrder, recivePaymentOrder } from "@/lib/services";
 import { useCallback, useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import useRazorpay from "react-razorpay";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { createPaymentOrder, recivePaymentOrder } from "@/actions/payment";
 
 const PaymentButton = ({ id, amount }: { amount: number; id: number }) => {
   const routes = useRouter();
@@ -17,7 +17,7 @@ const PaymentButton = ({ id, amount }: { amount: number; id: number }) => {
     try {
       setLoading(true);
       await recivePaymentOrder(res);
-      routes.refresh()
+      routes.refresh();
     } catch (e) {
       console.log(e);
     } finally {
@@ -59,8 +59,7 @@ const PaymentButton = ({ id, amount }: { amount: number; id: number }) => {
     <Button
       onClick={handlePayment}
       disabled={loading || !isLoaded}
-      className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 rounded-md font-semibold text-lg"
-    >
+      className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-6 rounded-md font-semibold text-lg">
       <div className="flex items-center justify-center gap-3">
         {loading ? (
           <>

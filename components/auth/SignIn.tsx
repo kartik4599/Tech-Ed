@@ -7,7 +7,7 @@ import { useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { loginAccount } from "@/lib/services";
+import { signin } from "@/actions/user";
 
 const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
   const { handleSubmit, formState, register } = useForm<SignInForm>({
@@ -23,8 +23,7 @@ const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
   const loginHandler = async (payload: SignInForm) => {
     try {
       setloading(true);
-      const { token } = await loginAccount(payload);
-      localStorage.setItem("token", token);
+      await signin(payload);
       toast.success("Logged In Succefully");
       router.push("/");
     } catch (e) {

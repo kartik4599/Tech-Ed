@@ -3,12 +3,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
-// import { createAccount } from "@/lib/services";
 import { useForm } from "react-hook-form";
 import { cn, SignUpForm, signUpFormResolver } from "@/lib/utils";
-// import userStore from "@/hooks/user-store";
 import { toast } from "sonner";
-import { createAccount } from "@/lib/services";
+import { signup } from "@/actions/user";
 
 const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
   const { register, handleSubmit, formState } = useForm<SignUpForm>({
@@ -22,7 +20,7 @@ const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
   const createUser = async (payload: SignUpForm) => {
     try {
       setloading(true);
-      const data = await createAccount(payload);
+      await signup(payload);
       toast.success("Account Created");
       setisSignIn();
     } catch (e: any) {
